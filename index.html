@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Ads Campaign Audit — PerfectServe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:           #FCF7F5;
+      --card:         #ffffff;
+      --ink:          #1c1f1d;
+      --ink-soft:     #5b6361;
+      --beige:        #E8DFD2;
+      --accent:       #2f7d6f;
+      --accent-dark:  #1f6155;
+      --accent-soft:  #d6e6e2;
+      --accent-lite:  #76A09C;
+      --warn:         #D8865A;
+      --bad:          #C44536;
+      --shadow-soft:  0 1px 2px rgba(20,30,28,0.04), 0 6px 20px rgba(20,30,28,0.05);
+      --shadow-hover: 0 2px 4px rgba(20,30,28,0.06), 0 14px 32px rgba(20,30,28,0.10);
+      --radius-card:  18px;
+      --radius-pill:  999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--ink);
+      font-family: "Montserrat", system-ui, sans-serif;
+      font-weight: 500; -webkit-font-smoothing: antialiased; line-height: 1.5;
+    }
+
+    .page-wrap { max-width: 1720px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    .site-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 0 24px; border-bottom: 1px solid var(--beige); margin-bottom: 24px;
+    }
+    .wordmark { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .header-meta { font-size: 12px; color: var(--ink-soft); }
+    .page-title  { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .page-sub    { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
+
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    .filter-bar input[type="text"] {
+      border: 1.5px solid var(--beige); border-radius: var(--radius-pill);
+      padding: 7px 16px; font-family: inherit; font-size: 13px; font-weight: 500;
+      color: var(--ink); background: var(--card); outline: none; width: 230px; transition: border-color 0.15s;
+    }
+    .filter-bar input[type="text"]:focus { border-color: var(--accent-lite); }
+    .filter-bar input[type="text"]::placeholder { color: var(--ink-soft); }
+
+    .fpill {
+      display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
+      border-radius: var(--radius-pill); border: 1.5px solid var(--beige);
+      background: var(--card); font-size: 12px; font-weight: 600; font-family: inherit;
+      color: var(--ink-soft); cursor: pointer; transition: all 0.15s;
+    }
+    .fpill:hover  { border-color: var(--accent-lite); color: var(--accent-dark); background: var(--accent-soft); }
+    .fpill.active { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-soft); }
+    .fpill .dot   { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    .clear-btn {
+      padding: 7px 16px; border-radius: var(--radius-pill); border: 1.5px solid var(--bad);
+      background: #fce8e6; font-size: 12px; font-weight: 700; color: var(--bad);
+      cursor: pointer; font-family: inherit; transition: all 0.15s; margin-left: 4px;
+    }
+    .clear-btn:hover { background: var(--bad); color: #fff; }
+
+    .summary-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; align-items: stretch; }
+    .summary-card {
+      background: var(--card); border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft); padding: 14px 20px; min-width: 120px;
+      cursor: pointer; transition: box-shadow 0.15s; user-select: none;
+      outline: 2px solid transparent; outline-offset: 2px;
+    }
+    .summary-card:hover { box-shadow: var(--shadow-hover); }
+    .summary-card.active { outline-color: var(--accent); }
+    .sc-label { font-size: 10px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+    .sc-value { font-size: 22px; font-weight: 700; }
+    .sc-sub   { font-size: 11px; color: var(--ink-soft); margin-top: 1px; }
+    .sc-value.v-green { color: var(--accent-dark); }
+    .sc-value.v-red   { color: var(--bad); }
+    .sc-value.v-amber { color: var(--warn); }
+
+    .table-card   { background: var(--card); border-radius: var(--radius-card); box-shadow: var(--shadow-soft); overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+    .table-scroll::-webkit-scrollbar       { height: 5px; }
+    .table-scroll::-webkit-scrollbar-track { background: var(--bg); }
+    .table-scroll::-webkit-scrollbar-thumb { background: var(--beige); border-radius: 3px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
+
+    .grp-th {
+      background: var(--bg); padding: 5px 12px;
+      font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink-soft); text-align: center;
+      border-right: 2px solid var(--beige); border-bottom: 1px solid var(--beige);
+    }
+    .grp-th:last-child { border-right: none; }
+
+    thead th {
+      background: var(--bg); padding: 10px 12px;
+      font-size: 10.5px; font-weight: 700; color: var(--ink-soft); text-align: left;
+      border-bottom: 2px solid var(--beige); border-right: 1px solid var(--beige);
+    }
+    thead th:first-child { position: sticky; left: 0; z-index: 3; min-width: 215px; border-right: 2px solid var(--beige); background: var(--bg); }
+    thead th:last-child  { border-right: none; }
+
+    tbody tr.data-row { border-bottom: 1px solid var(--beige); transition: background 0.1s; }
+    tbody tr.data-row:last-of-type { border-bottom: none; }
+    tbody tr.data-row:hover { background: #faf7f5; }
+    tbody tr.data-row:hover td:first-child { background: #faf7f5; }
+
+    td {
+      padding: 10px 12px; vertical-align: middle;
+      border-right: 1px solid var(--beige); color: var(--ink);
+    }
+    td:first-child {
+      position: sticky; left: 0; background: var(--card); z-index: 1;
+      border-right: 2px solid var(--beige); font-weight: 600;
+    }
+    td:last-child { border-right: none; }
+
+    .camp-name { font-size: 12px; font-weight: 700; display: block; }
+    .camp-type { font-size: 10.5px; font-weight: 500; color: var(--ink-soft); margin-top: 1px; display: block; }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: var(--radius-pill);
+      font-size: 11px; font-weight: 700;
+    }
+    .pill .pip { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    .pill-live    { background: var(--accent-soft); color: var(--accent-dark); }
+    .pill-live .pip { background: var(--accent); }
+    .pill-paused  { background: #f0ede9; color: var(--ink-soft); }
+    .pill-paused .pip { background: #c5bdb3; }
+    .pill-good    { background: var(--accent-soft); color: var(--accent-dark); }
+    .pill-bad     { background: #fce8e6; color: var(--bad); }
+    .pill-off     { background: #f0ede9; color: var(--ink-soft); }
+    .pill-warn    { background: #fdf0e8; color: #a95c2e; }
+    .pill-blank-red { background: #fce8e6; color: var(--bad); }
+
+    .txt-val      { color: var(--ink); font-size: 12px; }
+    .txt-missing  { color: var(--bad); font-weight: 700; font-size: 12px; }
+    .num-val      { display: block; text-align: center; font-weight: 700; }
+    .num-soft     { color: var(--ink-soft); }
+
+    .url-track {
+      max-width: 180px; overflow: hidden; text-overflow: ellipsis;
+      font-size: 10.5px; color: var(--ink-soft); font-family: "Courier New", monospace; display: inline-block;
+    }
+
+    .sched-cell { display: flex; align-items: center; gap: 6px; }
+    .sched-toggle {
+      background: none; border: 1px solid var(--beige); border-radius: 5px;
+      padding: 1px 7px; cursor: pointer; font-size: 11px; color: var(--ink-soft);
+      font-family: inherit; transition: all 0.15s; line-height: 1.5; flex-shrink: 0;
+    }
+    .sched-toggle:hover { border-color: var(--accent-lite); color: var(--accent); background: var(--accent-soft); }
+    .sched-toggle.open  { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-soft); }
+
+    /* Expandable detail rows (schedule + targeting) */
+    .schedule-detail td,
+    .targeting-detail td { background: var(--bg); padding: 0; border: none; }
+    .schedule-detail td:first-child,
+    .targeting-detail td:first-child { background: var(--bg); border-right: none; position: sticky; left: 0; z-index: 1; }
+    .schedule-detail .sched-content-cell,
+    .targeting-detail .sched-content-cell { padding: 0 12px 12px 0; }
+    .schedule-inner {
+      display: inline-flex; gap: 20px; flex-wrap: wrap;
+      background: var(--card); border: 1px solid var(--beige); border-radius: 10px;
+      padding: 10px 14px; font-size: 12px;
+    }
+    .schedule-row strong { color: var(--ink); margin-right: 8px; }
+    .schedule-row span   { color: var(--ink-soft); }
+
+    .legend {
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+      margin-top: 18px; padding: 12px 18px;
+      background: var(--card); border-radius: 12px; box-shadow: var(--shadow-soft);
+    }
+    .legend-ttl  { font-size: 11px; font-weight: 700; margin-right: 4px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--ink-soft); }
+    .legend-note { margin-left: auto; font-size: 11px; color: var(--ink-soft); font-style: italic; }
+
+    .site-footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--beige); text-align: center; font-size: 11px; color: var(--ink-soft); }
+
+    @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+    .table-card { animation: fadeIn 0.3s ease both; }
+    .summary-card:nth-child(1) { animation: fadeIn 0.18s ease both; }
+    .summary-card:nth-child(2) { animation: fadeIn 0.24s ease both; }
+    .summary-card:nth-child(3) { animation: fadeIn 0.30s ease both; }
+    .summary-card:nth-child(4) { animation: fadeIn 0.36s ease both; }
+    .summary-card:nth-child(5) { animation: fadeIn 0.42s ease both; }
+
+    .hidden-row { display: none !important; }
+    #noResults  { display: none; padding: 36px; text-align: center; color: var(--ink-soft); font-size: 13px; }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header class="site-header">
+    <span class="wordmark">REVENU</span>
+    <span class="header-meta">PerfectServe · Google Ads Account Audit · June 2026</span>
+  </header>
+
+  <h1 class="page-title">Campaign Settings Audit</h1>
+  <p class="page-sub">All campaigns — PerfectServe Google Ads account. Tiles filter cumulatively (AND logic). Click multiple tiles to narrow results.</p>
+
+  <div class="filter-bar">
+    <input type="text" id="searchInput" placeholder="Search campaigns…" oninput="applyFilters()" />
+    <button class="fpill active" id="fpill-all"    onclick="pillFilter('all',    this)"><span class="dot"></span>All</button>
+    <button class="fpill"        id="fpill-live"   onclick="pillFilter('live',   this)"><span class="dot"></span>Live</button>
+    <button class="fpill"        id="fpill-paused" onclick="pillFilter('paused', this)"><span class="dot"></span>Paused</button>
+    <button class="clear-btn"    onclick="clearAll()">✕ Clear</button>
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-card active" id="tile-all"       onclick="tileFilter('reset',      this)">
+      <div class="sc-label">Total Campaigns</div>
+      <div class="sc-value" id="sc-total">12</div>
+      <div class="sc-sub">in view</div>
+    </div>
+    <div class="summary-card" id="tile-live"       onclick="tileFilter('live',       this)">
+      <div class="sc-label">Live</div>
+      <div class="sc-value v-green" id="sc-live">10</div>
+      <div class="sc-sub">active</div>
+    </div>
+    <div class="summary-card" id="tile-aimax"      onclick="tileFilter('aimax',      this)">
+      <div class="sc-label">AI Max On</div>
+      <div class="sc-value v-amber" id="sc-aimax">4</div>
+      <div class="sc-sub">campaigns</div>
+    </div>
+    <div class="summary-card" id="tile-autoassets" onclick="tileFilter('autoassets', this)">
+      <div class="sc-label">Auto Assets On</div>
+      <div class="sc-value v-amber" id="sc-autoassets">3</div>
+      <div class="sc-sub">campaigns</div>
+    </div>
+    <div class="summary-card" id="tile-notrack"    onclick="tileFilter('notrack',    this)">
+      <div class="sc-label">Missing URL Tracking</div>
+      <div class="sc-value v-red" id="sc-notrack">1</div>
+      <div class="sc-sub">campaigns</div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-scroll">
+      <table id="auditTable">
+        <thead>
+          <tr>
+            <th rowspan="2" style="vertical-align:middle;position:sticky;left:0;z-index:3;background:var(--bg);min-width:215px;">Campaign</th>
+            <th rowspan="2" style="vertical-align:middle;min-width:80px;">Status</th>
+            <th colspan="2" class="grp-th">Network</th>
+            <th colspan="4" class="grp-th">Campaign Objective</th>
+            <th colspan="2" class="grp-th">Targeting</th>
+            <th colspan="8" class="grp-th">Settings</th>
+            <th colspan="3" class="grp-th" style="border-right:none;">Exclusions</th>
+          </tr>
+          <tr>
+            <th>Search</th><th>Display</th>
+            <th>Objective</th><th>Conv. Goals</th><th>Bidding</th><th>Cust. Acq.</th>
+            <th>Locs #</th><th>Langs #</th>
+            <th>EU Political</th><th>Auto Assets</th><th>Broad Match</th><th>Ad Rotation</th><th>Value Rules</th><th>AI Max</th><th>URL Tracking</th><th>Ad Schedule</th>
+            <th>IPs Excl. #</th><th>Brand Excl.</th><th style="border-right:none;">Excl. Locs #</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+
+          <!-- Row 1 -->
+          <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="1" data-tracking="1">
+            <td><span class="camp-name">NB – MP – Practice Communication</span><span class="camp-type">Non Brand · Medical Practice</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Demo</span></td><td><span class="txt-val">Maximise Conversions</span></td>
+            <td><span class="pill pill-bad">On</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-1')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-1')">▾</button></div></td>
+            <td><span class="pill pill-good">Off</span></td><td><span class="pill pill-bad">On</span></td><td><span class="pill pill-bad">On</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-warn">On</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><div class="sched-cell"><span class="pill pill-bad">On</span><button class="sched-toggle" onclick="toggleSchedule(this,'sd-1')">▾</button></div></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">Yes</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-1">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+          <tr class="schedule-detail hidden-row" id="sd-1">
+            <td></td><td colspan="16"></td>
+            <td colspan="4" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon – Fri</strong><span>7:00 AM – 7:00 PM</span></div><div class="schedule-row"><strong>Saturday</strong><span>8:00 AM – 2:00 PM</span></div></div></td>
+          </tr>
+
+          <!-- Row 2 -->
+          <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="1" data-tracking="1">
+            <td><span class="camp-name">NB – ENT – CCC – Communication</span><span class="camp-type">Non Brand · Clinical Comm. &amp; Collab.</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Demo</span></td><td><span class="txt-val">Target CPA</span></td>
+            <td><span class="pill pill-bad">On</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-2')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-2')">▾</button></div></td>
+            <td><span class="pill pill-good">Off</span></td><td><span class="pill pill-bad">On</span></td><td><span class="pill pill-bad">On</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-warn">On</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><div class="sched-cell"><span class="pill pill-bad">On</span><button class="sched-toggle" onclick="toggleSchedule(this,'sd-2')">▾</button></div></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">Yes</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-2">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+          <tr class="schedule-detail hidden-row" id="sd-2">
+            <td></td><td colspan="16"></td>
+            <td colspan="4" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon – Fri</strong><span>7:00 AM – 8:00 PM</span></div></div></td>
+          </tr>
+
+          <!-- Row 3 -->
+          <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="1" data-tracking="1">
+            <td><span class="camp-name">NB – MP – Scheduling</span><span class="camp-type">Non Brand · Physician Scheduling</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Demo</span></td><td><span class="txt-val">Maximise Conversions</span></td>
+            <td><span class="pill pill-bad">On</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-3')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-3')">▾</button></div></td>
+            <td><span class="pill pill-good">Off</span></td><td><span class="pill pill-bad">On</span></td><td><span class="pill pill-bad">On</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-warn">On</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><div class="sched-cell"><span class="pill pill-bad">On</span><button class="sched-toggle" onclick="toggleSchedule(this,'sd-3')">▾</button></div></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">Yes</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-3">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+          <tr class="schedule-detail hidden-row" id="sd-3">
+            <td></td><td colspan="16"></td>
+            <td colspan="4" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon – Fri</strong><span>7:00 AM – 8:00 PM</span></div><div class="schedule-row"><strong>Saturday</strong><span>9:00 AM – 3:00 PM</span></div></div></td>
+          </tr>
+
+          <!-- Row 4 -->
+          <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">Brand – Lightning Bolt</span><span class="camp-type">Brand · Lightning Bolt Scheduling</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Call</span></td><td><span class="txt-val">Target CPA</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-4')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-4')">▾</button></div></td>
+            <td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Rotate Evenly</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-4">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States, Canada</span></div><div class="schedule-row"><strong>Languages</strong><span>English, French</span></div></div></td>
+          </tr>
+
+          <!-- Row 5 -->
+          <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">Brand – PerfectServe</span><span class="camp-type">Brand · PerfectServe Core</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-bad">On</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Call, Demo</span></td><td><span class="txt-val">Max Conv. Value</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-5')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-5')">▾</button></div></td>
+            <td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-bad">Yes</span></td>
+            <td><span class="pill pill-warn">On</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">Yes</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-5">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States, Canada</span></div><div class="schedule-row"><strong>Languages</strong><span>English, French</span></div></div></td>
+          </tr>
+
+          <!-- Row 6 -->
+          <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">Comp – MP – Practice Communication</span><span class="camp-type">Competitor · Medical Practice</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Demo</span></td><td><span class="txt-val">Target CPA</span></td>
+            <td><span class="pill pill-bad">On</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-6')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-6')">▾</button></div></td>
+            <td><span class="pill pill-blank-red">Blank</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><div class="sched-cell"><span class="pill pill-bad">On</span><button class="sched-toggle" onclick="toggleSchedule(this,'sd-6')">▾</button></div></td>
+            <td><span class="num-val">3</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-6">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+          <tr class="schedule-detail hidden-row" id="sd-6">
+            <td></td><td colspan="16"></td>
+            <td colspan="4" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon – Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          </tr>
+
+          <!-- Row 7 -->
+          <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">Comp – MP – Scheduling</span><span class="camp-type">Competitor · Physician Scheduling</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Demo</span></td><td><span class="txt-val">Target CPA</span></td>
+            <td><span class="pill pill-bad">On</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-7')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-7')">▾</button></div></td>
+            <td><span class="pill pill-blank-red">Blank</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><div class="sched-cell"><span class="pill pill-bad">On</span><button class="sched-toggle" onclick="toggleSchedule(this,'sd-7')">▾</button></div></td>
+            <td><span class="num-val">2</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-7">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+          <tr class="schedule-detail hidden-row" id="sd-7">
+            <td></td><td colspan="16"></td>
+            <td colspan="4" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon – Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          </tr>
+
+          <!-- Row 8 -->
+          <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">Comp – OpCon – Spok</span><span class="camp-type">Competitor · Operator Console</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit</span></td><td><span class="txt-val">Maximise Conversions</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-8')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-8')">▾</button></div></td>
+            <td><span class="pill pill-blank-red">Blank</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-8">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+
+          <!-- Row 9 -->
+          <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">Comp – OpCon – Amtelco</span><span class="camp-type">Competitor · Operator Console</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit</span></td><td><span class="txt-val">Maximise Conversions</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-9')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-9')">▾</button></div></td>
+            <td><span class="pill pill-blank-red">Blank</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-9">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+
+          <!-- Row 10 -->
+          <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">Comp – CCC</span><span class="camp-type">Competitor · Clinical Comms</span></td>
+            <td><span class="pill pill-live"><span class="pip"></span>Live</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Demo</span></td><td><span class="txt-val">Target CPA</span></td>
+            <td><span class="pill pill-bad">On</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-10')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-10')">▾</button></div></td>
+            <td><span class="pill pill-blank-red">Blank</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><div class="sched-cell"><span class="pill pill-bad">On</span><button class="sched-toggle" onclick="toggleSchedule(this,'sd-10')">▾</button></div></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-10">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+          <tr class="schedule-detail hidden-row" id="sd-10">
+            <td></td><td colspan="16"></td>
+            <td colspan="4" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon – Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          </tr>
+
+          <!-- Row 11 -->
+          <tr class="data-row" data-status="paused" data-aimax="0" data-autoassets="0" data-tracking="0">
+            <td><span class="camp-name">NB – OpCon</span><span class="camp-type">Non Brand · Operator Console</span></td>
+            <td><span class="pill pill-paused"><span class="pip"></span>Paused</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit</span></td><td><span class="txt-val">Maximise Conversions</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-11')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-11')">▾</button></div></td>
+            <td><span class="pill pill-blank-red">Blank</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="txt-missing">Missing</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-11">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+
+          <!-- Row 12 -->
+          <tr class="data-row" data-status="paused" data-aimax="0" data-autoassets="0" data-tracking="1">
+            <td><span class="camp-name">MPPC – Comp – AnswerFirst – RSA – US</span><span class="camp-type">Competitor · MP Practice Comms</span></td>
+            <td><span class="pill pill-paused"><span class="pip"></span>Paused</span></td>
+            <td><span class="pill pill-bad">On</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Leads</span></td><td><span class="txt-val">Form Submit, Demo</span></td><td><span class="txt-val">Target CPA</span></td>
+            <td><span class="pill pill-good">Off</span></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-12')">▾</button></div></td>
+            <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleSchedule(this,'tg-12')">▾</button></div></td>
+            <td><span class="pill pill-blank-red">Blank</span></td><td><span class="pill pill-good">Off</span></td><td><span class="pill pill-good">Off</span></td>
+            <td><span class="txt-val">Optimise</span></td><td><span class="pill pill-good">No</span></td>
+            <td><span class="pill pill-off">Off</span></td>
+            <td><span class="url-track" title="{lpurl}?utm_source=google&amp;utm_medium=cpc&amp;utm_campaign={campaign}">{lpurl}?utm_source=google&amp;utm_medium=cpc…</span></td>
+            <td><div class="sched-cell"><span class="pill pill-bad">On</span><button class="sched-toggle" onclick="toggleSchedule(this,'sd-12')">▾</button></div></td>
+            <td><span class="num-val num-soft">0</span></td><td><span class="txt-val">No</span></td><td><span class="num-val num-soft">0</span></td>
+          </tr>
+          <tr class="targeting-detail hidden-row" id="tg-12">
+            <td></td><td colspan="7"></td>
+            <td colspan="13" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          </tr>
+          <tr class="schedule-detail hidden-row" id="sd-12">
+            <td></td><td colspan="16"></td>
+            <td colspan="4" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon – Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          </tr>
+
+        </tbody>
+      </table>
+      <div id="noResults">No campaigns match the current filters.</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-ttl">Legend:</span>
+    <span class="legend-item"><span class="pill pill-good" style="font-size:10px;padding:2px 8px;">Off / No</span>Desired state</span>
+    <span class="legend-item"><span class="pill pill-bad"  style="font-size:10px;padding:2px 8px;">On / Yes</span>Needs attention</span>
+    <span class="legend-item"><span class="pill pill-warn" style="font-size:10px;padding:2px 8px;">On</span>AI Max enabled</span>
+    <span class="legend-item"><span class="pill pill-blank-red" style="font-size:10px;padding:2px 8px;">Blank</span>Not configured</span>
+    <span class="legend-item"><span class="txt-missing" style="font-size:11px;">Missing</span>URL tracking absent</span>
+    <span class="legend-note">Dummy data — populate from live account export</span>
+  </div>
+
+  <footer class="site-footer">© Revenu · Google Ads Campaign Audit · PerfectServe · June 2026</footer>
+</div>
+
+<script>
+  let statusFilter = 'all';
+  let tileFilters  = new Set();
+
+  function pillFilter(status, btn) {
+    statusFilter = status;
+    document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function tileFilter(type, el) {
+    if (type === 'reset') { clearAll(); return; }
+    if (tileFilters.has(type)) { tileFilters.delete(type); el.classList.remove('active'); }
+    else { tileFilters.add(type); el.classList.add('active'); }
+    applyFilters();
+  }
+
+  function clearAll() {
+    statusFilter = 'all'; tileFilters.clear();
+    document.getElementById('searchInput').value = '';
+    document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
+    document.getElementById('fpill-all').classList.add('active');
+    document.querySelectorAll('.summary-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('tile-all').classList.add('active');
+    closeAllDetails(); applyFilters();
+  }
+
+  function applyFilters() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    document.querySelectorAll('#tableBody tr.data-row').forEach(row => {
+      let match = true;
+      if (statusFilter !== 'all') match = row.dataset.status === statusFilter;
+      if (match && tileFilters.has('live'))       match = row.dataset.status    === 'live';
+      if (match && tileFilters.has('aimax'))      match = row.dataset.aimax      === '1';
+      if (match && tileFilters.has('autoassets')) match = row.dataset.autoassets === '1';
+      if (match && tileFilters.has('notrack'))    match = row.dataset.tracking   === '0';
+      if (match && q) {
+        const name = (row.querySelector('.camp-name')?.textContent || '').toLowerCase();
+        const type = (row.querySelector('.camp-type')?.textContent || '').toLowerCase();
+        match = name.includes(q) || type.includes(q);
+      }
+      row.classList.toggle('hidden-row', !match);
+      // Hide any open detail rows (targeting + schedule) when campaign is filtered out
+      if (!match) {
+        let sibling = row.nextElementSibling;
+        while (sibling && (sibling.classList.contains('targeting-detail') || sibling.classList.contains('schedule-detail'))) {
+          sibling.classList.add('hidden-row');
+          sibling = sibling.nextElementSibling;
+        }
+        row.querySelectorAll('.sched-toggle.open').forEach(b => { b.classList.remove('open'); b.textContent = '▾'; });
+      }
+    });
+    updateSummary(); checkNoResults();
+  }
+
+  function updateSummary() {
+    const rows = Array.from(document.querySelectorAll('#tableBody tr.data-row:not(.hidden-row)'));
+    document.getElementById('sc-total').textContent      = rows.length;
+    document.getElementById('sc-live').textContent       = rows.filter(r => r.dataset.status    === 'live').length;
+    document.getElementById('sc-aimax').textContent      = rows.filter(r => r.dataset.aimax      === '1').length;
+    document.getElementById('sc-autoassets').textContent = rows.filter(r => r.dataset.autoassets === '1').length;
+    document.getElementById('sc-notrack').textContent    = rows.filter(r => r.dataset.tracking   === '0').length;
+  }
+
+  function checkNoResults() {
+    document.getElementById('noResults').style.display =
+      document.querySelectorAll('#tableBody tr.data-row:not(.hidden-row)').length === 0 ? 'block' : 'none';
+  }
+
+  function toggleSchedule(btn, id) {
+    const detail = document.getElementById(id);
+    const isOpen = !detail.classList.contains('hidden-row');
+    closeAllDetails();
+    if (!isOpen) {
+      detail.classList.remove('hidden-row');
+      // Mark all toggle buttons for this detail open
+      document.querySelectorAll(`[onclick*="'${id}'"]`).forEach(b => { b.classList.add('open'); b.textContent = '▴'; });
+    }
+  }
+
+  function closeAllDetails() {
+    document.querySelectorAll('.schedule-detail:not(.hidden-row), .targeting-detail:not(.hidden-row)').forEach(r => r.classList.add('hidden-row'));
+    document.querySelectorAll('.sched-toggle.open').forEach(b => { b.classList.remove('open'); b.textContent = '▾'; });
+  }
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.sched-cell')) closeAllDetails();
+  });
+  updateSummary();
+</script>
+</body>
+</html>
