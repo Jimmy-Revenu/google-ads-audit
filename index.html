@@ -113,31 +113,45 @@
 
     /* ── Overview group header columns ── */
     thead th.ov-hdr {
-      text-align: center; padding: 8px 10px;
+      text-align: center; padding: 8px 12px;
       cursor: pointer; user-select: none;
       transition: background .15s, color .15s;
-      border-right: 1px solid var(--beige);
-      min-width: 56px;
+      border-right: none;
+      min-width: 80px;
     }
     thead th.ov-hdr:hover { background: var(--accent-soft); color: var(--accent-dark); }
     thead th.ov-hdr.expanded { background: var(--accent-soft); }
-    .ov-hdr-inner { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-    .ov-hdr-icon  { display: flex; align-items: center; color: var(--ink-soft); }
+    /* Inline layout: icon | + button | sort arrows */
+    .ov-hdr-inner { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; }
+    .ov-hdr-icon  { display: flex; align-items: center; color: var(--ink-soft); flex-shrink: 0; }
     .ov-hdr-btn {
       display: inline-flex; align-items: center; justify-content: center;
       width: 16px; height: 16px; border-radius: 50%;
       border: 1.5px solid currentColor; background: none;
-      font-size: 12px; line-height: 1; cursor: pointer; color: inherit;
-      font-family: inherit; font-weight: 800; transition: background .12s;
+      font-size: 11px; line-height: 1; cursor: pointer; color: inherit;
+      font-family: inherit; font-weight: 800; transition: background .12s; flex-shrink: 0;
     }
     .ov-hdr-btn:hover { background: rgba(0,0,0,.1); }
 
     /* Sub-column headers that appear when expanded */
-    thead th.sub-hdr {
-      border-left: none;
-      font-size: 10.5px;
+    thead th.sub-hdr { border-left: none; border-right: none; font-size: 10.5px; }
+
+    /* Sort button — used on Campaign, Status, and group overview headers */
+    .sort-btn {
+      display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0px; cursor: pointer; padding: 0 1px; background: none; border: none;
+      color: var(--ink-soft); opacity: .5; transition: opacity .15s; flex-shrink: 0;
+      line-height: 1;
     }
-    thead th.sub-hdr:last-of-type { border-right: 1px solid var(--beige); }
+    .sort-btn:hover { opacity: 1; color: var(--accent-dark); }
+    .sort-btn.asc  .arr-dn,
+    .sort-btn.desc .arr-up { opacity: .25; }
+    .sort-btn.asc  .arr-up,
+    .sort-btn.desc .arr-dn { opacity: 1; color: var(--accent-dark); }
+    .arr-up, .arr-dn { display: block; font-size: 8px; line-height: 1.1; }
+
+    /* Campaign / Status header with sort */
+    .th-inner { display: flex; align-items: center; gap: 5px; }
 
     /* ── Data rows ── */
     tbody tr.data-row { border-bottom: 1px solid var(--beige); transition: background .1s; }
@@ -156,15 +170,11 @@
     }
     tbody tr.data-row:hover td:first-child { background: #faf7f5; }
 
-    /* Overview data cells — always visible */
-    td.ov-cell {
-      text-align: center; padding: 12px 10px;
-      border-right: 1px solid var(--beige);
-    }
+    /* Overview data cells — always visible, no right border */
+    td.ov-cell { text-align: center; padding: 12px 10px; border-right: none; }
 
-    /* Sub-data cells that expand */
+    /* Sub-data cells — no borders */
     td.sub-data { border-right: none; }
-    td.sub-data:last-of-type { border-right: 1px solid var(--beige); }
 
     /* Campaign name */
     .camp-name { font-size: 13px; font-weight: 700; display: block; }
@@ -274,16 +284,19 @@
       <thead>
         <tr id="hdrRow">
           <!-- Sticky campaign column -->
-          <th>Campaign</th>
-          <th>Status</th>
+          <th onclick="sortTable('campaign',this)" style="cursor:pointer;user-select:none;">
+            <div class="th-inner">Campaign <button class="sort-btn" id="sort-campaign" onclick="event.stopPropagation();sortTable('campaign',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button></div>
+          </th>
+          <th onclick="sortTable('status',this)" style="cursor:pointer;user-select:none;">
+            <div class="th-inner">Status <button class="sort-btn" id="sort-status" onclick="event.stopPropagation();sortTable('status',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button></div>
+          </th>
 
           <!-- ▸ NETWORK group overview header -->
           <th class="ov-hdr" id="ovh-network" onclick="toggleGroup('network')" title="Network">
             <div class="ov-hdr-inner">
-              <span class="ov-hdr-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20" stroke-width="4"/></svg>
-              </span>
+              <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20" stroke-width="4"/></svg></span>
               <button class="ov-hdr-btn" id="btn-network" onclick="event.stopPropagation();toggleGroup('network')">+</button>
+              <button class="sort-btn" id="sort-network" onclick="event.stopPropagation();sortTable('network',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
             </div>
           </th>
           <!-- Network sub-columns (hidden by default) -->
@@ -293,10 +306,9 @@
           <!-- ▸ OBJECTIVES group overview header -->
           <th class="ov-hdr" id="ovh-objectives" onclick="toggleGroup('objectives')" title="Campaign Objective">
             <div class="ov-hdr-inner">
-              <span class="ov-hdr-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
-              </span>
+              <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg></span>
               <button class="ov-hdr-btn" id="btn-objectives" onclick="event.stopPropagation();toggleGroup('objectives')">+</button>
+              <button class="sort-btn" id="sort-objectives" onclick="event.stopPropagation();sortTable('objectives',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
             </div>
           </th>
           <!-- Objectives sub-columns -->
@@ -308,10 +320,9 @@
           <!-- ▸ TARGETING group overview header -->
           <th class="ov-hdr" id="ovh-targeting" onclick="toggleGroup('targeting')" title="Targeting">
             <div class="ov-hdr-inner">
-              <span class="ov-hdr-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="currentColor" stroke="none"/></svg>
-              </span>
+              <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="currentColor" stroke="none"/></svg></span>
               <button class="ov-hdr-btn" id="btn-targeting" onclick="event.stopPropagation();toggleGroup('targeting')">+</button>
+              <button class="sort-btn" id="sort-targeting" onclick="event.stopPropagation();sortTable('targeting',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
             </div>
           </th>
           <!-- Targeting sub-columns (hidden by default) -->
@@ -321,10 +332,9 @@
           <!-- ▸ SETTINGS group overview header -->
           <th class="ov-hdr" id="ovh-settings" onclick="toggleGroup('settings')" title="Settings">
             <div class="ov-hdr-inner">
-              <span class="ov-hdr-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              </span>
+              <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
               <button class="ov-hdr-btn" id="btn-settings" onclick="event.stopPropagation();toggleGroup('settings')">+</button>
+              <button class="sort-btn" id="sort-settings" onclick="event.stopPropagation();sortTable('settings',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
             </div>
           </th>
           <!-- Settings sub-columns -->
@@ -338,12 +348,11 @@
           <th class="sub-hdr hidden-col grp-settings">Ad Schedule</th>
 
           <!-- ▸ EXCLUSIONS group overview header -->
-          <th class="ov-hdr" id="ovh-exclusions" onclick="toggleGroup('exclusions')" title="Exclusions" style="border-right:none;">
+          <th class="ov-hdr" id="ovh-exclusions" onclick="toggleGroup('exclusions')" title="Exclusions">
             <div class="ov-hdr-inner">
-              <span class="ov-hdr-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-              </span>
+              <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>
               <button class="ov-hdr-btn" id="btn-exclusions" onclick="event.stopPropagation();toggleGroup('exclusions')">+</button>
+              <button class="sort-btn" id="sort-exclusions" onclick="event.stopPropagation();sortTable('exclusions',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
             </div>
           </th>
           <!-- Exclusions sub-columns -->
@@ -848,7 +857,77 @@
     document.getElementById('sc-notrack').textContent    = rows.filter(r => r.dataset.tracking   === '0').length;
   }
 
+  /* ─────────────────────────────────────
+     Sort
+  ───────────────────────────────────── */
+  let sortState = { col: null, dir: 0 }; // dir: 0=none, 1=asc, -1=desc
+
+  function getRowSortKey(row, col) {
+    switch (col) {
+      case 'campaign':
+        return (row.querySelector('.camp-name')?.textContent || '').trim().toLowerCase();
+      case 'status':
+        return row.dataset.status || '';
+      case 'network':
+      case 'objectives':
+      case 'settings':
+      case 'exclusions': {
+        // Sort by bad count (numeric from overview badge)
+        const ov = row.querySelector('.ov-' + col);
+        const badge = ov?.querySelector('.pn.bad');
+        return badge ? parseInt(badge.textContent, 10) || 0 : 0;
+      }
+      case 'targeting': {
+        // Sort by targeting sum (numeric)
+        const ov = row.querySelector('.ov-targeting');
+        const num = ov?.querySelector('.num-val');
+        return num ? parseInt(num.textContent, 10) || 0 : 0;
+      }
+      default: return '';
+    }
+  }
+
+  function sortTable(col, thEl) {
+    // Cycle direction: none → asc → desc → none
+    if (sortState.col === col) {
+      sortState.dir = sortState.dir === 1 ? -1 : (sortState.dir === -1 ? 0 : 1);
+    } else {
+      sortState.col = col;
+      sortState.dir = 1;
+    }
+
+    // Reset all sort button classes
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('asc','desc'));
+
+    const tbody = document.getElementById('tableBody');
+    const rows  = [...tbody.querySelectorAll('tr.data-row')];
+
+    if (sortState.dir === 0) {
+      // Restore original order (by original DOM index stored as data attr)
+      rows.sort((a, b) => (parseInt(a.dataset.origIdx,10)||0) - (parseInt(b.dataset.origIdx,10)||0));
+    } else {
+      const btn = document.getElementById('sort-' + col);
+      if (btn) btn.classList.add(sortState.dir === 1 ? 'asc' : 'desc');
+
+      rows.sort((a, b) => {
+        const ka = getRowSortKey(a, col);
+        const kb = getRowSortKey(b, col);
+        let cmp = 0;
+        if (typeof ka === 'number' && typeof kb === 'number') {
+          cmp = ka - kb;
+        } else {
+          cmp = String(ka).localeCompare(String(kb));
+        }
+        return cmp * sortState.dir;
+      });
+    }
+
+    rows.forEach(r => tbody.appendChild(r));
+  }
+
   /* ─── Init ─── */
+  // Tag each row with its original index so we can restore order
+  document.querySelectorAll('#tableBody .data-row').forEach((r, i) => r.dataset.origIdx = i);
   computeOverviews();
   updateSummary();
 </script>
