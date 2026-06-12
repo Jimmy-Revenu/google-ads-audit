@@ -22,7 +22,6 @@
       --bad:         #C44536;
       --shadow:      0 1px 2px rgba(20,30,28,.04), 0 6px 20px rgba(20,30,28,.05);
       --shadow-hov:  0 2px 4px rgba(20,30,28,.05), 0 12px 28px rgba(20,30,28,.08);
-      --radius:      18px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
@@ -31,29 +30,26 @@
       font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       font-weight: 500; line-height: 1.5; -webkit-font-smoothing: antialiased;
     }
-    .page     { display: flex; flex-direction: column; min-height: 100vh; }
+    .page      { display: flex; flex-direction: column; min-height: 100vh; }
     .page-wrap { max-width: 1780px; margin: 0 auto; padding: 0 24px 64px; width: 100%; }
 
     /* ── Header ── */
-    header.top { padding: 20px 0; position: relative; z-index: 20; }
+    header.top { padding: 20px 0; }
     header.top .row {
       display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid var(--beige); padding-bottom: 20px; margin-bottom: 24px;
     }
-    .logo {
-      font-size: clamp(18px,1.6vw,24px); font-weight: 600; color: var(--ink);
-      letter-spacing: .24em; line-height: 1; background: none; border: 0; font-family: inherit;
-    }
+    .logo { font-size: clamp(18px,1.6vw,24px); font-weight: 600; color: var(--ink); letter-spacing: .24em; line-height: 1; }
     .header-meta { font-size: 12px; color: var(--ink-soft); }
-    .page-title  { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-    .page-sub    { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
+    .page-title { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .page-sub   { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
 
     /* ── Filter bar ── */
     .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
     .filter-bar input[type="text"] {
-      border: 1.5px solid var(--beige); border-radius: 999px;
-      padding: 7px 16px; font-family: inherit; font-size: 13px; font-weight: 500;
-      color: var(--ink); background: var(--card); outline: none; width: 230px; transition: border-color .15s;
+      border: 1.5px solid var(--beige); border-radius: 999px; padding: 7px 16px;
+      font-family: inherit; font-size: 13px; font-weight: 500; color: var(--ink);
+      background: var(--card); outline: none; width: 220px; transition: border-color .15s;
     }
     .filter-bar input[type="text"]:focus { border-color: var(--accent-lite); }
     .filter-bar input[type="text"]::placeholder { color: var(--ink-soft); }
@@ -69,27 +65,28 @@
     .clear-btn {
       padding: 7px 16px; border-radius: 999px; border: 1.5px solid var(--bad);
       background: #fce8e6; font-size: 12px; font-weight: 700; color: var(--bad);
-      cursor: pointer; font-family: inherit; transition: all .15s; margin-left: 4px;
+      cursor: pointer; font-family: inherit; transition: all .15s;
     }
     .clear-btn:hover { background: var(--bad); color: #fff; }
 
     /* ── Summary cards ── */
     .summary-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
     .summary-card {
-      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 14px 20px; min-width: 120px; cursor: pointer; transition: box-shadow .15s;
-      user-select: none; outline: 2px solid transparent; outline-offset: 2px;
+      background: var(--card); border-radius: 16px; box-shadow: var(--shadow);
+      padding: 14px 20px; min-width: 110px; cursor: pointer;
+      transition: box-shadow .15s; user-select: none;
+      outline: 2px solid transparent; outline-offset: 2px;
     }
     .summary-card:hover  { box-shadow: var(--shadow-hov); }
     .summary-card.active { outline-color: var(--accent); }
     .sc-label { font-size: 10px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
     .sc-value { font-size: 22px; font-weight: 700; }
     .sc-sub   { font-size: 11px; color: var(--ink-soft); margin-top: 1px; }
-    .v-green { color: var(--accent-dark); }
-    .v-red   { color: var(--bad); }
-    .v-amber { color: var(--warn); }
+    .v-green  { color: var(--accent-dark); }
+    .v-red    { color: var(--bad); }
+    .v-amber  { color: var(--warn); }
 
-    /* ── Table card — exact audience-explorer sizing ── */
+    /* ── Table card ── */
     .rtable-wrap {
       background: var(--card); border-radius: 16px;
       box-shadow: 0 1px 2px rgba(20,30,28,.04), 0 6px 20px rgba(20,30,28,.05);
@@ -99,72 +96,81 @@
     .rtable-wrap::-webkit-scrollbar-track { background: var(--bg); }
     .rtable-wrap::-webkit-scrollbar-thumb { background: var(--beige); border-radius: 3px; }
 
-    table { width: 100%; border-collapse: collapse; white-space: nowrap; min-width: 900px; }
+    table { width: 100%; border-collapse: collapse; white-space: nowrap; }
 
-    /* ── Group header row (row 1) ── */
-    .grp-th {
-      background: #FDF9F7; padding: 7px 12px;
-      font-size: 9.5px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
-      color: var(--ink-soft); text-align: center;
-      border-bottom: 1px solid var(--beige); border-right: 2px solid var(--beige);
-      cursor: pointer; user-select: none; transition: background .15s, color .15s;
-    }
-    .grp-th:last-child { border-right: none; }
-    .grp-th.no-toggle  { cursor: default; }
-    .grp-th:not(.no-toggle):hover { background: var(--accent-soft); color: var(--accent-dark); }
-
-    .grp-inner { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
-    .grp-icon  { display: flex; align-items: center; flex-shrink: 0; }
-    .grp-lbl   { font-size: 9px; font-weight: 800; letter-spacing: .07em; }
-    .grp-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 15px; height: 15px; border-radius: 50%;
-      border: 1.5px solid currentColor; background: none;
-      font-size: 11px; line-height: 1; cursor: pointer; color: inherit;
-      font-family: inherit; font-weight: 700; flex-shrink: 0;
-      transition: background .15s;
-    }
-    .grp-btn:hover { background: rgba(0,0,0,.08); }
-    .grp-th.grp-collapsed .grp-lbl { display: none; }
-
-    /* ── Sub-header row (row 2) — exact audience-explorer values ── */
+    /* ── Header cells (single row) ── */
     thead th {
-      background: #FDF9F7; padding: 12px 16px;
-      font-size: 11px; font-weight: 800; color: var(--ink-soft); text-align: left;
-      border-bottom: 1px solid var(--beige); border-right: 1px solid var(--beige);
-      letter-spacing: .06em; text-transform: uppercase;
+      background: #FDF9F7; padding: 12px 14px;
+      font-size: 11px; font-weight: 800; color: var(--ink-soft);
+      text-transform: uppercase; letter-spacing: .06em; text-align: left;
+      border-bottom: 1px solid var(--beige);
+      border-right: none;
     }
     thead th:first-child {
-      position: sticky; left: 0; z-index: 3; min-width: 220px;
-      border-right: 2px solid var(--beige); background: #FDF9F7;
+      position: sticky; left: 0; z-index: 3; min-width: 230px;
+      background: #FDF9F7; border-right: 1px solid var(--beige);
     }
-    thead th:last-child { border-right: none; }
 
-    /* ── Data rows — exact audience-explorer values ── */
+    /* ── Overview group header columns ── */
+    thead th.ov-hdr {
+      text-align: center; padding: 8px 10px;
+      cursor: pointer; user-select: none;
+      transition: background .15s, color .15s;
+      border-right: 1px solid var(--beige);
+      min-width: 56px;
+    }
+    thead th.ov-hdr:hover { background: var(--accent-soft); color: var(--accent-dark); }
+    thead th.ov-hdr.expanded { background: var(--accent-soft); }
+    .ov-hdr-inner { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .ov-hdr-icon  { display: flex; align-items: center; color: var(--ink-soft); }
+    .ov-hdr-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 1.5px solid currentColor; background: none;
+      font-size: 12px; line-height: 1; cursor: pointer; color: inherit;
+      font-family: inherit; font-weight: 800; transition: background .12s;
+    }
+    .ov-hdr-btn:hover { background: rgba(0,0,0,.1); }
+
+    /* Sub-column headers that appear when expanded */
+    thead th.sub-hdr {
+      border-left: none;
+      font-size: 10.5px;
+    }
+    thead th.sub-hdr:last-of-type { border-right: 1px solid var(--beige); }
+
+    /* ── Data rows ── */
     tbody tr.data-row { border-bottom: 1px solid var(--beige); transition: background .1s; }
-    tbody tr.data-row:last-of-type { border-bottom: none; }
+    tbody tr.data-row:last-child { border-bottom: none; }
     tbody tr.data-row:hover { background: #faf7f5; }
     tbody tr.data-row:hover td:first-child { background: #faf7f5; }
 
     td {
-      padding: 12px 16px; vertical-align: middle;
-      border-right: 1px solid var(--beige);
+      padding: 12px 14px; vertical-align: middle;
+      border-right: none; border-bottom: none;
       color: var(--ink); font-size: 13px; font-weight: 500;
     }
     td:first-child {
       position: sticky; left: 0; background: var(--card); z-index: 1;
-      border-right: 2px solid var(--beige); font-weight: 600;
+      border-right: 1px solid var(--beige); font-weight: 600;
     }
-    td:last-child { border-right: none; }
-    td.ov-col {
+    tbody tr.data-row:hover td:first-child { background: #faf7f5; }
+
+    /* Overview data cells — always visible */
+    td.ov-cell {
       text-align: center; padding: 12px 10px;
-      border-right: 2px solid var(--beige);
+      border-right: 1px solid var(--beige);
     }
 
+    /* Sub-data cells that expand */
+    td.sub-data { border-right: none; }
+    td.sub-data:last-of-type { border-right: 1px solid var(--beige); }
+
+    /* Campaign name */
     .camp-name { font-size: 13px; font-weight: 700; display: block; }
     .camp-type { font-size: 11px; font-weight: 500; color: var(--ink-soft); display: block; margin-top: 1px; }
 
-    /* ── Pill badges — audience-explorer .pillnum system ── */
+    /* ── Pill badges (audience-explorer .pillnum system) ── */
     .pn {
       display: inline-flex; align-items: center; justify-content: center;
       min-width: 30px; height: 22px; padding: 2px 9px;
@@ -179,42 +185,13 @@
     /* Status pills */
     .pill-live   { display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;background:#d6e6e2;color:#1f6155; }
     .pill-paused { display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;background:#f0ede9;color:var(--ink-soft); }
-    .pip { width:6px;height:6px;border-radius:50%;flex-shrink:0;background:currentColor; }
+    .pip { width:6px; height:6px; border-radius:50%; flex-shrink:0; background:currentColor; }
 
     .txt-val     { color: var(--ink); font-size: 13px; }
     .txt-missing { color: #a3382b; font-weight: 800; font-size: 12px; }
     .num-val     { display: block; text-align: center; font-weight: 700; }
     .num-soft    { color: var(--ink-soft); }
-    .url-track   {
-      max-width: 170px; overflow: hidden; text-overflow: ellipsis;
-      font-size: 11px; color: var(--ink-soft); font-family: "Courier New", monospace; display: inline-block;
-    }
-
-    /* ── Sched toggle ── */
-    .sched-cell   { display: flex; align-items: center; gap: 6px; }
-    .sched-toggle {
-      background: none; border: 1px solid var(--beige); border-radius: 5px;
-      padding: 1px 7px; cursor: pointer; font-size: 11px; color: var(--ink-soft);
-      font-family: inherit; transition: all .15s; line-height: 1.5; flex-shrink: 0;
-    }
-    .sched-toggle:hover { border-color: var(--accent-lite); color: var(--accent); background: var(--accent-soft); }
-    .sched-toggle.open  { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-soft); }
-
-    /* ── Detail rows ── */
-    .schedule-detail td, .targeting-detail td {
-      background: var(--bg); padding: 0; border: none;
-    }
-    .schedule-detail td:first-child, .targeting-detail td:first-child {
-      background: var(--bg); border-right: none; position: sticky; left: 0; z-index: 1;
-    }
-    .sched-content-cell { padding: 0 16px 12px 0; }
-    .schedule-inner {
-      display: inline-flex; gap: 20px; flex-wrap: wrap;
-      background: var(--card); border: 1px solid var(--beige); border-radius: 10px;
-      padding: 10px 14px; font-size: 12px;
-    }
-    .schedule-row strong { color: var(--ink); margin-right: 8px; }
-    .schedule-row span   { color: var(--ink-soft); }
+    .url-track   { max-width: 160px; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: var(--ink-soft); font-family: "Courier New", monospace; display: inline-block; }
 
     /* ── Legend ── */
     .legend {
@@ -229,17 +206,17 @@
     /* ── Footer ── */
     footer {
       margin-top: auto; border-top: 1px solid var(--beige);
-      background: var(--bg); padding: 14px 0; text-align: center;
-      font-size: 14px; color: var(--ink-soft); position: relative; z-index: 1;
+      background: var(--bg); padding: 14px 0;
+      text-align: center; font-size: 14px; color: var(--ink-soft);
     }
 
-    /* ── Animations ── */
-    @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
-    .summary-card { animation: fadeIn .25s ease both; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
     .rtable-wrap  { animation: fadeIn .3s ease both; }
+    .summary-card { animation: fadeIn .2s ease both; }
 
+    .hidden-col { display: none !important; }
     .hidden-row { display: none !important; }
-    #noResults  { display: none; padding: 36px; text-align: center; color: var(--ink-soft); font-size: 13px; }
+    #noResults  { display: none; padding: 40px; text-align: center; color: var(--ink-soft); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -254,7 +231,7 @@
   </header>
 
   <h1 class="page-title">Campaign Settings Audit</h1>
-  <p class="page-sub">All campaigns — PerfectServe Google Ads account. Click column group icons to collapse / expand. Collapsed groups show a red-item count per row.</p>
+  <p class="page-sub">All campaigns — PerfectServe Google Ads account. Click the group icon to expand sub-columns.</p>
 
   <div class="filter-bar">
     <input type="text" id="searchInput" placeholder="Search campaigns…" oninput="applyFilters()" />
@@ -267,7 +244,7 @@
   <div class="summary-bar">
     <div class="summary-card active" id="tile-all"       onclick="tileFilter('reset',this)">
       <div class="sc-label">Total Campaigns</div>
-      <div class="sc-value" id="sc-total">12</div>
+      <div class="sc-value"       id="sc-total">12</div>
       <div class="sc-sub">in view</div>
     </div>
     <div class="summary-card" id="tile-live"       onclick="tileFilter('live',this)">
@@ -295,502 +272,434 @@
   <div class="rtable-wrap">
     <table id="auditTable">
       <thead>
-        <!-- ROW 1: group headers -->
-        <tr id="grp-row">
-          <th rowspan="2" style="vertical-align:middle;position:sticky;left:0;z-index:4;background:#FDF9F7;min-width:220px;border-bottom:2px solid var(--beige);">Campaign</th>
-          <th rowspan="2" style="vertical-align:middle;min-width:85px;border-bottom:2px solid var(--beige);">Status</th>
-          <!-- Network -->
-          <th colspan="2" class="grp-th" id="grp-network" onclick="toggleGroup('network')">
-            <div class="grp-inner">
-              <span class="grp-icon">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20" stroke-width="3.5"/></svg>
+        <tr id="hdrRow">
+          <!-- Sticky campaign column -->
+          <th>Campaign</th>
+          <th>Status</th>
+
+          <!-- ▸ NETWORK group overview header -->
+          <th class="ov-hdr" id="ovh-network" onclick="toggleGroup('network')" title="Network">
+            <div class="ov-hdr-inner">
+              <span class="ov-hdr-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20" stroke-width="4"/></svg>
               </span>
-              <span class="grp-lbl">Network</span>
-              <button class="grp-btn" onclick="event.stopPropagation();toggleGroup('network')">−</button>
+              <button class="ov-hdr-btn" id="btn-network" onclick="event.stopPropagation();toggleGroup('network')">+</button>
             </div>
           </th>
-          <!-- Objectives -->
-          <th colspan="4" class="grp-th" id="grp-objectives" onclick="toggleGroup('objectives')">
-            <div class="grp-inner">
-              <span class="grp-icon">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
+          <!-- Network sub-columns (hidden by default) -->
+          <th class="sub-hdr hidden-col grp-network">Search</th>
+          <th class="sub-hdr hidden-col grp-network">Display</th>
+
+          <!-- ▸ OBJECTIVES group overview header -->
+          <th class="ov-hdr" id="ovh-objectives" onclick="toggleGroup('objectives')" title="Campaign Objective">
+            <div class="ov-hdr-inner">
+              <span class="ov-hdr-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
               </span>
-              <span class="grp-lbl">Campaign Objective</span>
-              <button class="grp-btn" onclick="event.stopPropagation();toggleGroup('objectives')">−</button>
+              <button class="ov-hdr-btn" id="btn-objectives" onclick="event.stopPropagation();toggleGroup('objectives')">+</button>
             </div>
           </th>
-          <!-- Targeting (fixed) -->
-          <th colspan="2" class="grp-th no-toggle">
-            <div class="grp-inner">
-              <span class="grp-icon">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              </span>
-              <span class="grp-lbl">Targeting</span>
-            </div>
-          </th>
-          <!-- Settings -->
-          <th colspan="8" class="grp-th" id="grp-settings" onclick="toggleGroup('settings')">
-            <div class="grp-inner">
-              <span class="grp-icon">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              </span>
-              <span class="grp-lbl">Settings</span>
-              <button class="grp-btn" onclick="event.stopPropagation();toggleGroup('settings')">−</button>
-            </div>
-          </th>
-          <!-- Exclusions -->
-          <th colspan="3" class="grp-th" id="grp-exclusions" onclick="toggleGroup('exclusions')" style="border-right:none;">
-            <div class="grp-inner">
-              <span class="grp-icon">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-              </span>
-              <span class="grp-lbl">Exclusions</span>
-              <button class="grp-btn" onclick="event.stopPropagation();toggleGroup('exclusions')">−</button>
-            </div>
-          </th>
-        </tr>
-        <!-- ROW 2: sub-column headers -->
-        <tr id="sub-row">
-          <!-- Network (2) -->
-          <th class="sub-network">Search</th>
-          <th class="sub-network">Display</th>
-          <!-- Objectives (4) -->
-          <th class="sub-objectives">Objective</th>
-          <th class="sub-objectives">Conv. Goals</th>
-          <th class="sub-objectives">Bidding</th>
-          <th class="sub-objectives">Cust. Acq.</th>
-          <!-- Targeting (2 — always visible) -->
+          <!-- Objectives sub-columns -->
+          <th class="sub-hdr hidden-col grp-objectives">Objective</th>
+          <th class="sub-hdr hidden-col grp-objectives">Conv. Goals</th>
+          <th class="sub-hdr hidden-col grp-objectives">Bidding</th>
+          <th class="sub-hdr hidden-col grp-objectives">Cust. Acq.</th>
+
+          <!-- Targeting — always visible, no collapse -->
           <th>Locs #</th>
           <th>Langs #</th>
-          <!-- Settings (8) -->
-          <th class="sub-settings">EU Political</th>
-          <th class="sub-settings">Auto Assets</th>
-          <th class="sub-settings">Broad Match</th>
-          <th class="sub-settings">Ad Rotation</th>
-          <th class="sub-settings">Value Rules</th>
-          <th class="sub-settings">AI Max</th>
-          <th class="sub-settings">URL Tracking</th>
-          <th class="sub-settings">Ad Schedule</th>
-          <!-- Exclusions (3) -->
-          <th class="sub-exclusions">IPs Excl. #</th>
-          <th class="sub-exclusions">Brand Excl.</th>
-          <th class="sub-exclusions" style="border-right:none;">Excl. Locs #</th>
+
+          <!-- ▸ SETTINGS group overview header -->
+          <th class="ov-hdr" id="ovh-settings" onclick="toggleGroup('settings')" title="Settings">
+            <div class="ov-hdr-inner">
+              <span class="ov-hdr-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </span>
+              <button class="ov-hdr-btn" id="btn-settings" onclick="event.stopPropagation();toggleGroup('settings')">+</button>
+            </div>
+          </th>
+          <!-- Settings sub-columns -->
+          <th class="sub-hdr hidden-col grp-settings">EU Political</th>
+          <th class="sub-hdr hidden-col grp-settings">Auto Assets</th>
+          <th class="sub-hdr hidden-col grp-settings">Broad Match</th>
+          <th class="sub-hdr hidden-col grp-settings">Ad Rotation</th>
+          <th class="sub-hdr hidden-col grp-settings">Value Rules</th>
+          <th class="sub-hdr hidden-col grp-settings">AI Max</th>
+          <th class="sub-hdr hidden-col grp-settings">URL Tracking</th>
+          <th class="sub-hdr hidden-col grp-settings">Ad Schedule</th>
+
+          <!-- ▸ EXCLUSIONS group overview header -->
+          <th class="ov-hdr" id="ovh-exclusions" onclick="toggleGroup('exclusions')" title="Exclusions" style="border-right:none;">
+            <div class="ov-hdr-inner">
+              <span class="ov-hdr-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              </span>
+              <button class="ov-hdr-btn" id="btn-exclusions" onclick="event.stopPropagation();toggleGroup('exclusions')">+</button>
+            </div>
+          </th>
+          <!-- Exclusions sub-columns -->
+          <th class="sub-hdr hidden-col grp-exclusions">IPs Excl. #</th>
+          <th class="sub-hdr hidden-col grp-exclusions">Brand Excl.</th>
+          <th class="sub-hdr hidden-col grp-exclusions" style="border-right:none;">Excl. Locs #</th>
         </tr>
       </thead>
       <tbody id="tableBody">
 
-        <!-- ═══ ROW 1 ═══ -->
+        <!-- ══════════════════ ROW 1 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="1" data-tracking="1">
           <td><span class="camp-name">NB – MP – Practice Communication</span><span class="camp-type">Non Brand · Medical Practice</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <!-- Network overview (hidden when expanded) -->
-          <td class="ov-col ov-network" style="display:none"></td>
-          <!-- Network data -->
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
+          <!-- Network overview -->
+          <td class="ov-cell ov-network"></td>
+          <!-- Network sub-data -->
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
           <!-- Objectives overview -->
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <!-- Objectives data -->
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Max Conversions</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn bad">On</span></td>
-          <!-- Targeting (always visible) -->
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-1')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-1')">▾</button></div></td>
+          <td class="ov-cell ov-objectives"></td>
+          <!-- Objectives sub-data -->
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
+          <!-- Targeting -->
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
           <!-- Settings overview -->
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <!-- Settings data -->
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn bad">On</span></td>
-          <td class="sub-settings d-settings"><span class="pn bad">On</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn warn">On</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><div class="sched-cell"><span class="pn bad">On</span><button class="sched-toggle" onclick="toggleDetail(this,'sd-1')">▾</button></div></td>
+          <td class="ov-cell ov-settings"></td>
+          <!-- Settings sub-data -->
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn warn">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
           <!-- Exclusions overview -->
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <!-- Exclusions data -->
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">Yes</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-1">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
-        </tr>
-        <tr class="schedule-detail hidden-row" id="sd-1">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon–Fri</strong><span>7:00 AM – 7:00 PM</span></div><div class="schedule-row"><strong>Saturday</strong><span>8:00 AM – 2:00 PM</span></div></div></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <!-- Exclusions sub-data -->
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">Yes</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 2 ═══ -->
+        <!-- ══════════════════ ROW 2 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="1" data-tracking="1">
           <td><span class="camp-name">NB – ENT – CCC – Communication</span><span class="camp-type">Non Brand · Clinical Comm. &amp; Collab.</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Target CPA</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn bad">On</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-2')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-2')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn bad">On</span></td>
-          <td class="sub-settings d-settings"><span class="pn bad">On</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn warn">On</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><div class="sched-cell"><span class="pn bad">On</span><button class="sched-toggle" onclick="toggleDetail(this,'sd-2')">▾</button></div></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">Yes</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-2">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
-        </tr>
-        <tr class="schedule-detail hidden-row" id="sd-2">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon–Fri</strong><span>7:00 AM – 8:00 PM</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn warn">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">Yes</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 3 ═══ -->
+        <!-- ══════════════════ ROW 3 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="1" data-tracking="1">
           <td><span class="camp-name">NB – MP – Scheduling</span><span class="camp-type">Non Brand · Physician Scheduling</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Max Conversions</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn bad">On</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-3')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-3')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn bad">On</span></td>
-          <td class="sub-settings d-settings"><span class="pn bad">On</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn warn">On</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><div class="sched-cell"><span class="pn bad">On</span><button class="sched-toggle" onclick="toggleDetail(this,'sd-3')">▾</button></div></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">Yes</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-3">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
-        </tr>
-        <tr class="schedule-detail hidden-row" id="sd-3">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon–Fri</strong><span>7:00 AM – 8:00 PM</span></div><div class="schedule-row"><strong>Saturday</strong><span>9:00 AM – 3:00 PM</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn warn">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">Yes</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 4 ═══ -->
+        <!-- ══════════════════ ROW 4 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">Brand – Lightning Bolt</span><span class="camp-type">Brand · Lightning Bolt Scheduling</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Call</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Target CPA</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn good">Off</span></td>
-          <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-4')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-4')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Rotate Evenly</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-4">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States, Canada</span></div><div class="schedule-row"><strong>Languages</strong><span>English, French</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Call</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
+          <td><span class="num-val">2</span></td>
+          <td><span class="num-val">2</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Rotate Evenly</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 5 ═══ -->
+        <!-- ══════════════════ ROW 5 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="1" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">Brand – PerfectServe</span><span class="camp-type">Brand · PerfectServe Core</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Call, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Max Conv. Value</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn good">Off</span></td>
-          <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-5')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">2</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-5')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn bad">Yes</span></td>
-          <td class="sub-settings d-settings"><span class="pn warn">On</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">Yes</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-5">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States, Canada</span></div><div class="schedule-row"><strong>Languages</strong><span>English, French</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Call, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conv. Value</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
+          <td><span class="num-val">2</span></td>
+          <td><span class="num-val">2</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">Yes</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn warn">On</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">Yes</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 6 ═══ -->
+        <!-- ══════════════════ ROW 6 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">Comp – MP – Practice Communication</span><span class="camp-type">Competitor · Medical Practice</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Target CPA</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn bad">On</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-6')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-6')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn blank">Blank</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><div class="sched-cell"><span class="pn bad">On</span><button class="sched-toggle" onclick="toggleDetail(this,'sd-6')">▾</button></div></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val">3</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-6">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
-        </tr>
-        <tr class="schedule-detail hidden-row" id="sd-6">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon–Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val">3</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 7 ═══ -->
+        <!-- ══════════════════ ROW 7 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">Comp – MP – Scheduling</span><span class="camp-type">Competitor · Physician Scheduling</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Target CPA</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn bad">On</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-7')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-7')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn blank">Blank</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><div class="sched-cell"><span class="pn bad">On</span><button class="sched-toggle" onclick="toggleDetail(this,'sd-7')">▾</button></div></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val">2</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-7">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
-        </tr>
-        <tr class="schedule-detail hidden-row" id="sd-7">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon–Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val">2</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 8 ═══ -->
+        <!-- ══════════════════ ROW 8 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">Comp – OpCon – Spok</span><span class="camp-type">Competitor · Operator Console</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Max Conversions</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn good">Off</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-8')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-8')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn blank">Blank</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-8">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 9 ═══ -->
+        <!-- ══════════════════ ROW 9 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">Comp – OpCon – Amtelco</span><span class="camp-type">Competitor · Operator Console</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Max Conversions</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn good">Off</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-9')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-9')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn blank">Blank</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-9">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 10 ═══ -->
+        <!-- ══════════════════ ROW 10 ══════════════════ -->
         <tr class="data-row" data-status="live" data-aimax="0" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">Comp – CCC</span><span class="camp-type">Competitor · Clinical Comms</span></td>
           <td><span class="pill-live"><span class="pip"></span>Live</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Target CPA</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn bad">On</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-10')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-10')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn blank">Blank</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><div class="sched-cell"><span class="pn bad">On</span><button class="sched-toggle" onclick="toggleDetail(this,'sd-10')">▾</button></div></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-10">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
-        </tr>
-        <tr class="schedule-detail hidden-row" id="sd-10">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon–Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 11 ═══ -->
+        <!-- ══════════════════ ROW 11 ══════════════════ -->
         <tr class="data-row" data-status="paused" data-aimax="0" data-autoassets="0" data-tracking="0">
           <td><span class="camp-name">NB – OpCon</span><span class="camp-type">Non Brand · Operator Console</span></td>
           <td><span class="pill-paused"><span class="pip"></span>Paused</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Max Conversions</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn good">Off</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-11')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-11')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn blank">Blank</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-missing">Missing</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-11">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-missing">Missing</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
-        <!-- ═══ ROW 12 ═══ -->
+        <!-- ══════════════════ ROW 12 ══════════════════ -->
         <tr class="data-row" data-status="paused" data-aimax="0" data-autoassets="0" data-tracking="1">
           <td><span class="camp-name">MPPC – Comp – AnswerFirst – RSA – US</span><span class="camp-type">Competitor · MP Practice Comms</span></td>
           <td><span class="pill-paused"><span class="pip"></span>Paused</span></td>
-          <td class="ov-col ov-network" style="display:none"></td>
-          <td class="sub-network d-network"><span class="pn bad">On</span></td>
-          <td class="sub-network d-network"><span class="pn good">Off</span></td>
-          <td class="ov-col ov-objectives" style="display:none"></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Leads</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Form Submit, Demo</span></td>
-          <td class="sub-objectives d-objectives"><span class="txt-val">Target CPA</span></td>
-          <td class="sub-objectives d-objectives"><span class="pn good">Off</span></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-12')">▾</button></div></td>
-          <td><div class="sched-cell"><span class="num-val">1</span><button class="sched-toggle" onclick="toggleDetail(this,'tg-12')">▾</button></div></td>
-          <td class="ov-col ov-settings" style="display:none"></td>
-          <td class="sub-settings d-settings"><span class="pn blank">Blank</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">Off</span></td>
-          <td class="sub-settings d-settings"><span class="txt-val">Optimise</span></td>
-          <td class="sub-settings d-settings"><span class="pn good">No</span></td>
-          <td class="sub-settings d-settings"><span class="pn off">Off</span></td>
-          <td class="sub-settings d-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
-          <td class="sub-settings d-settings"><div class="sched-cell"><span class="pn bad">On</span><button class="sched-toggle" onclick="toggleDetail(this,'sd-12')">▾</button></div></td>
-          <td class="ov-col ov-exclusions" style="display:none"></td>
-          <td class="sub-exclusions d-exclusions"><span class="num-val num-soft">0</span></td>
-          <td class="sub-exclusions d-exclusions"><span class="txt-val">No</span></td>
-          <td class="sub-exclusions d-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
-        </tr>
-        <tr class="targeting-detail hidden-row" id="tg-12">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Locations</strong><span>United States</span></div><div class="schedule-row"><strong>Languages</strong><span>English</span></div></div></td>
-        </tr>
-        <tr class="schedule-detail hidden-row" id="sd-12">
-          <td></td><td colspan="99" class="sched-content-cell"><div class="schedule-inner"><div class="schedule-row"><strong>Mon–Fri</strong><span>8:00 AM – 6:00 PM</span></div></div></td>
+          <td class="ov-cell ov-network"></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn bad">On</span></td>
+          <td class="sub-data hidden-col grp-network"><span class="pn good">Off</span></td>
+          <td class="ov-cell ov-objectives"></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Leads</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
+          <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
+          <td><span class="num-val">1</span></td>
+          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-settings"></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="txt-val">Optimise</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn good">No</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn off">Off</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="url-track">{lpurl}?utm_source=google…</span></td>
+          <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
+          <td class="ov-cell ov-exclusions"></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="num-val num-soft">0</span></td>
+          <td class="sub-data hidden-col grp-exclusions"><span class="txt-val">No</span></td>
+          <td class="sub-data hidden-col grp-exclusions" style="border-right:none;"><span class="num-val num-soft">0</span></td>
         </tr>
 
       </tbody>
@@ -800,11 +709,11 @@
 
   <div class="legend">
     <span class="legend-ttl">Legend:</span>
-    <span class="legend-item"><span class="pn good" style="font-size:10px;height:18px;min-width:24px;">Off</span>Desired state</span>
+    <span class="legend-item"><span class="pn good" style="font-size:10px;height:18px;min-width:24px;">Off</span>Desired</span>
     <span class="legend-item"><span class="pn bad"  style="font-size:10px;height:18px;min-width:24px;">On</span>Needs attention</span>
-    <span class="legend-item"><span class="pn warn" style="font-size:10px;height:18px;min-width:24px;">On</span>AI Max enabled</span>
+    <span class="legend-item"><span class="pn warn" style="font-size:10px;height:18px;min-width:24px;">On</span>AI Max</span>
     <span class="legend-item"><span class="pn blank" style="font-size:10px;height:18px;min-width:36px;">Blank</span>Not configured</span>
-    <span class="legend-item"><span class="txt-missing">Missing</span>URL tracking absent</span>
+    <span class="legend-item"><span class="txt-missing">Missing</span>No URL tracking</span>
     <span class="legend-note">Dummy data — populate from live account export</span>
   </div>
 
@@ -813,14 +722,54 @@
 </div>
 
 <script>
-  /* ─────────────────────────────────────────
-     Filter state
-  ───────────────────────────────────────── */
+  /* ─────────────────────────────────────
+     Group state — all start collapsed
+  ───────────────────────────────────── */
+  const groupState = { network: false, objectives: false, settings: false, exclusions: false };
+
+  const GROUPS = ['network', 'objectives', 'settings', 'exclusions'];
+
+  function toggleGroup(g) {
+    groupState[g] = !groupState[g];
+    const expanded = groupState[g];
+
+    // Update header button and highlight
+    const hdr = document.getElementById('ovh-' + g);
+    const btn = document.getElementById('btn-' + g);
+    btn.textContent = expanded ? '−' : '+';
+    hdr.classList.toggle('expanded', expanded);
+
+    // Show/hide sub-header and sub-data cells
+    document.querySelectorAll('.grp-' + g).forEach(el => {
+      el.classList.toggle('hidden-col', !expanded);
+    });
+  }
+
+  /* ─────────────────────────────────────
+     Overview count badges — always shown
+  ───────────────────────────────────── */
+  function computeOverviews() {
+    document.querySelectorAll('#tableBody .data-row').forEach(row => {
+      GROUPS.forEach(g => {
+        const ovCell = row.querySelector('.ov-' + g);
+        if (!ovCell) return;
+        const bad = [...row.querySelectorAll('.grp-' + g)]
+          .filter(td => td.querySelector('.pn.bad, .pn.blank, .txt-missing')).length;
+        ovCell.innerHTML = bad > 0
+          ? `<span class="pn bad">${bad}</span>`
+          : `<span class="pn good">✓</span>`;
+      });
+    });
+  }
+
+  /* ─────────────────────────────────────
+     Filters
+  ───────────────────────────────────── */
   let statusFilter = 'all';
   const tileFilters = new Set();
 
-  function pillFilter(status, btn) {
-    statusFilter = status;
+  function pillFilter(s, btn) {
+    statusFilter = s;
     document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     applyFilters();
@@ -840,12 +789,12 @@
     document.getElementById('fpill-all').classList.add('active');
     document.querySelectorAll('.summary-card').forEach(c => c.classList.remove('active'));
     document.getElementById('tile-all').classList.add('active');
-    closeAllDetails(); applyFilters();
+    applyFilters();
   }
 
   function applyFilters() {
     const q = document.getElementById('searchInput').value.toLowerCase().trim();
-    document.querySelectorAll('#tableBody tr.data-row').forEach(row => {
+    document.querySelectorAll('#tableBody .data-row').forEach(row => {
       let ok = true;
       if (statusFilter !== 'all') ok = row.dataset.status === statusFilter;
       if (ok && tileFilters.has('live'))       ok = row.dataset.status    === 'live';
@@ -853,25 +802,19 @@
       if (ok && tileFilters.has('autoassets')) ok = row.dataset.autoassets === '1';
       if (ok && tileFilters.has('notrack'))    ok = row.dataset.tracking   === '0';
       if (ok && q) {
-        const txt = row.querySelector('.camp-name')?.textContent.toLowerCase() + ' ' +
-                    row.querySelector('.camp-type')?.textContent.toLowerCase();
-        ok = txt.includes(q);
+        const txt = (row.querySelector('.camp-name')?.textContent || '') + ' ' +
+                    (row.querySelector('.camp-type')?.textContent || '');
+        ok = txt.toLowerCase().includes(q);
       }
       row.classList.toggle('hidden-row', !ok);
-      if (!ok) {
-        // hide associated detail rows
-        let s = row.nextElementSibling;
-        while (s && (s.classList.contains('targeting-detail') || s.classList.contains('schedule-detail'))) {
-          s.classList.add('hidden-row'); s = s.nextElementSibling;
-        }
-        row.querySelectorAll('.sched-toggle.open').forEach(b => { b.classList.remove('open'); b.textContent = '▾'; });
-      }
     });
-    updateSummary(); checkNoResults();
+    updateSummary();
+    document.getElementById('noResults').style.display =
+      document.querySelectorAll('#tableBody .data-row:not(.hidden-row)').length === 0 ? 'block' : 'none';
   }
 
   function updateSummary() {
-    const rows = [...document.querySelectorAll('#tableBody tr.data-row:not(.hidden-row)')];
+    const rows = [...document.querySelectorAll('#tableBody .data-row:not(.hidden-row)')];
     document.getElementById('sc-total').textContent      = rows.length;
     document.getElementById('sc-live').textContent       = rows.filter(r => r.dataset.status    === 'live').length;
     document.getElementById('sc-aimax').textContent      = rows.filter(r => r.dataset.aimax      === '1').length;
@@ -879,93 +822,8 @@
     document.getElementById('sc-notrack').textContent    = rows.filter(r => r.dataset.tracking   === '0').length;
   }
 
-  function checkNoResults() {
-    document.getElementById('noResults').style.display =
-      document.querySelectorAll('#tableBody tr.data-row:not(.hidden-row)').length === 0 ? 'block' : 'none';
-  }
-
-  /* ─────────────────────────────────────────
-     Expandable detail rows
-  ───────────────────────────────────────── */
-  function toggleDetail(btn, id) {
-    const detail = document.getElementById(id);
-    const wasOpen = !detail.classList.contains('hidden-row');
-    closeAllDetails();
-    if (!wasOpen) {
-      detail.classList.remove('hidden-row');
-      document.querySelectorAll(`[onclick*="'${id}'"]`).forEach(b => { b.classList.add('open'); b.textContent = '▴'; });
-    }
-  }
-
-  function closeAllDetails() {
-    document.querySelectorAll('.schedule-detail:not(.hidden-row), .targeting-detail:not(.hidden-row)')
-      .forEach(r => r.classList.add('hidden-row'));
-    document.querySelectorAll('.sched-toggle.open')
-      .forEach(b => { b.classList.remove('open'); b.textContent = '▾'; });
-  }
-
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.sched-cell') && !e.target.closest('.grp-th')) closeAllDetails();
-  });
-
-  /* ─────────────────────────────────────────
-     Collapsible column groups
-  ───────────────────────────────────────── */
-  const GROUP_DEFS = {
-    network:    { thId: 'grp-network',    subClass: 'sub-network',    dataClass: 'd-network',    ovClass: 'ov-network',    origSpan: 2 },
-    objectives: { thId: 'grp-objectives', subClass: 'sub-objectives', dataClass: 'd-objectives', ovClass: 'ov-objectives', origSpan: 4 },
-    settings:   { thId: 'grp-settings',   subClass: 'sub-settings',   dataClass: 'd-settings',   ovClass: 'ov-settings',   origSpan: 8 },
-    exclusions: { thId: 'grp-exclusions', subClass: 'sub-exclusions', dataClass: 'd-exclusions', ovClass: 'ov-exclusions', origSpan: 3 },
-  };
-  const groupState = { network: true, objectives: true, settings: true, exclusions: true };
-
-  function countBad(row, dataClass) {
-    return [...row.querySelectorAll('.' + dataClass)].filter(
-      td => td.querySelector('.pn.bad, .pn.blank, .txt-missing')
-    ).length;
-  }
-
-  function toggleGroup(g) {
-    const def = GROUP_DEFS[g];
-    groupState[g] = !groupState[g];
-    const expanded = groupState[g];
-    const grpTh = document.getElementById(def.thId);
-
-    // Update group header
-    grpTh.setAttribute('colspan', expanded ? def.origSpan : 1);
-    grpTh.classList.toggle('grp-collapsed', !expanded);
-    const btn = grpTh.querySelector('.grp-btn');
-    if (btn) btn.textContent = expanded ? '−' : '+';
-
-    // Toggle sub-headers
-    document.querySelectorAll('#sub-row .' + def.subClass)
-      .forEach(th => th.style.display = expanded ? '' : 'none');
-
-    // Toggle data cells + overview cells
-    document.querySelectorAll('#tableBody .data-row').forEach(row => {
-      // data cells
-      row.querySelectorAll('.' + def.dataClass)
-        .forEach(td => td.style.display = expanded ? '' : 'none');
-
-      // overview cell
-      const ov = row.querySelector('.' + def.ovClass);
-      if (!ov) return;
-      ov.style.display = expanded ? 'none' : '';
-      if (!expanded) {
-        const n = countBad(row, def.dataClass);
-        ov.innerHTML = n > 0
-          ? `<span class="pn bad">${n}</span>`
-          : `<span class="pn good">✓</span>`;
-      }
-    });
-
-    // Collapsing settings → close all schedule details
-    if (g === 'settings' && !expanded) {
-      document.querySelectorAll('.schedule-detail:not(.hidden-row)').forEach(r => r.classList.add('hidden-row'));
-      document.querySelectorAll('.sched-toggle.open').forEach(b => { b.classList.remove('open'); b.textContent = '▾'; });
-    }
-  }
-
+  /* ─── Init ─── */
+  computeOverviews();
   updateSummary();
 </script>
 </body>
