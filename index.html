@@ -305,9 +305,18 @@
           <th class="sub-hdr hidden-col grp-objectives">Bidding</th>
           <th class="sub-hdr hidden-col grp-objectives">Cust. Acq.</th>
 
-          <!-- Targeting — always visible, no collapse -->
-          <th>Locs #</th>
-          <th>Langs #</th>
+          <!-- ▸ TARGETING group overview header -->
+          <th class="ov-hdr" id="ovh-targeting" onclick="toggleGroup('targeting')" title="Targeting">
+            <div class="ov-hdr-inner">
+              <span class="ov-hdr-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="currentColor" stroke="none"/></svg>
+              </span>
+              <button class="ov-hdr-btn" id="btn-targeting" onclick="event.stopPropagation();toggleGroup('targeting')">+</button>
+            </div>
+          </th>
+          <!-- Targeting sub-columns (hidden by default) -->
+          <th class="sub-hdr hidden-col grp-targeting">Locs #</th>
+          <th class="sub-hdr hidden-col grp-targeting">Langs #</th>
 
           <!-- ▸ SETTINGS group overview header -->
           <th class="ov-hdr" id="ovh-settings" onclick="toggleGroup('settings')" title="Settings">
@@ -361,9 +370,11 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
-          <!-- Targeting -->
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <!-- Targeting overview -->
+          <td class="ov-cell ov-targeting"></td>
+          <!-- Targeting sub-data -->
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <!-- Settings overview -->
           <td class="ov-cell ov-settings"></td>
           <!-- Settings sub-data -->
@@ -453,8 +464,11 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Call</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
-          <td><span class="num-val">2</span></td>
-          <td><span class="num-val">2</span></td>
+          <!-- Targeting overview -->
+          <td class="ov-cell ov-targeting"></td>
+          <!-- Targeting sub-data -->
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">2</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">2</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -482,8 +496,11 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Call, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conv. Value</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
-          <td><span class="num-val">2</span></td>
-          <td><span class="num-val">2</span></td>
+          <!-- Targeting overview -->
+          <td class="ov-cell ov-targeting"></td>
+          <!-- Targeting sub-data -->
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">2</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">2</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -725,9 +742,9 @@
   /* ─────────────────────────────────────
      Group state — all start collapsed
   ───────────────────────────────────── */
-  const groupState = { network: false, objectives: false, settings: false, exclusions: false };
+  const groupState = { network: false, objectives: false, targeting: false, settings: false, exclusions: false };
 
-  const GROUPS = ['network', 'objectives', 'settings', 'exclusions'];
+  const GROUPS = ['network', 'objectives', 'targeting', 'settings', 'exclusions'];
 
   function toggleGroup(g) {
     groupState[g] = !groupState[g];
@@ -753,11 +770,20 @@
       GROUPS.forEach(g => {
         const ovCell = row.querySelector('.ov-' + g);
         if (!ovCell) return;
-        const bad = [...row.querySelectorAll('.grp-' + g)]
-          .filter(td => td.querySelector('.pn.bad, .pn.blank, .txt-missing')).length;
-        ovCell.innerHTML = bad > 0
-          ? `<span class="pn bad">${bad}</span>`
-          : `<span class="pn good">✓</span>`;
+
+        if (g === 'targeting') {
+          // Sum Locs + Langs numeric values
+          const nums = [...row.querySelectorAll('.grp-targeting .num-val')]
+            .map(el => parseInt(el.textContent, 10) || 0);
+          const total = nums.reduce((a, b) => a + b, 0);
+          ovCell.innerHTML = `<span class="num-val" style="font-weight:700;">${total}</span>`;
+        } else {
+          const bad = [...row.querySelectorAll('.grp-' + g)]
+            .filter(td => td.querySelector('.pn.bad, .pn.blank, .txt-missing')).length;
+          ovCell.innerHTML = bad > 0
+            ? `<span class="pn bad">${bad}</span>`
+            : `<span class="pn good">✓</span>`;
+        }
       });
     });
   }
