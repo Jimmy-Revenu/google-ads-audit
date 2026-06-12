@@ -121,37 +121,36 @@
     }
     thead th.ov-hdr:hover { background: var(--accent-soft); color: var(--accent-dark); }
     thead th.ov-hdr.expanded { background: var(--accent-soft); }
-    /* Inline layout: icon | + button | sort arrows */
+    /* Inline layout: icon | + button — all in one row */
     .ov-hdr-inner { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; }
     .ov-hdr-icon  { display: flex; align-items: center; color: var(--ink-soft); flex-shrink: 0; }
+    /* Expand button — audience.revenuagency.io fb-expand style */
     .ov-hdr-btn {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 1.5px solid currentColor; background: none;
-      font-size: 11px; line-height: 1; cursor: pointer; color: inherit;
-      font-family: inherit; font-weight: 800; transition: background .12s; flex-shrink: 0;
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 1px solid var(--beige); background: var(--card);
+      font-size: 12px; line-height: 1; cursor: pointer; color: var(--ink-soft);
+      font-family: inherit; font-weight: 800; transition: border-color .12s, color .12s;
+      flex-shrink: 0;
     }
-    .ov-hdr-btn:hover { background: rgba(0,0,0,.1); }
+    .ov-hdr-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     /* Sub-column headers that appear when expanded */
     thead th.sub-hdr { border-left: none; border-right: none; font-size: 10.5px; }
 
-    /* Sort button — used on Campaign, Status, and group overview headers */
-    .sort-btn {
-      display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 0px; cursor: pointer; padding: 0 1px; background: none; border: none;
-      color: var(--ink-soft); opacity: .5; transition: opacity .15s; flex-shrink: 0;
-      line-height: 1;
-    }
-    .sort-btn:hover { opacity: 1; color: var(--accent-dark); }
-    .sort-btn.asc  .arr-dn,
-    .sort-btn.desc .arr-up { opacity: .25; }
-    .sort-btn.asc  .arr-up,
-    .sort-btn.desc .arr-dn { opacity: 1; color: var(--accent-dark); }
-    .arr-up, .arr-dn { display: block; font-size: 8px; line-height: 1.1; }
+    /* Sort — audience.revenuagency.io style: ⇅ via ::after on .srt class */
+    thead th.srt { cursor: pointer; user-select: none; }
+    thead th.srt::after { content: "⇅"; opacity: 0.35; font-size: 10px; margin-left: 6px; }
+    thead th.srt-asc::after  { content: "↑"; opacity: 0.9; }
+    thead th.srt-desc::after { content: "↓"; opacity: 0.9; }
+    /* Group overview headers use a span for the sort indicator (can't use ::after on flex container reliably) */
+    .srt-ic { font-size: 10px; opacity: 0.35; margin-left: 4px; flex-shrink: 0; transition: opacity .15s; }
+    .ov-hdr.srt-asc  .srt-ic::before { content: "↑"; opacity: 0.9; }
+    .ov-hdr.srt-desc .srt-ic::before { content: "↓"; opacity: 0.9; }
+    .ov-hdr:not(.srt-asc):not(.srt-desc) .srt-ic::before { content: "⇅"; }
 
-    /* Campaign / Status header with sort */
-    .th-inner { display: flex; align-items: center; gap: 5px; }
+    /* Campaign / Status header inner wrapper */
+    .th-inner { display: flex; align-items: center; gap: 0; }
 
     /* ── Data rows ── */
     tbody tr.data-row { border-bottom: 1px solid var(--beige); transition: background .1s; }
@@ -284,19 +283,15 @@
       <thead>
         <tr id="hdrRow">
           <!-- Sticky campaign column -->
-          <th onclick="sortTable('campaign',this)" style="cursor:pointer;user-select:none;">
-            <div class="th-inner">Campaign <button class="sort-btn" id="sort-campaign" onclick="event.stopPropagation();sortTable('campaign',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button></div>
-          </th>
-          <th onclick="sortTable('status',this)" style="cursor:pointer;user-select:none;">
-            <div class="th-inner">Status <button class="sort-btn" id="sort-status" onclick="event.stopPropagation();sortTable('status',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button></div>
-          </th>
+          <th class="srt" id="srt-campaign" onclick="sortTable('campaign',this)">Campaign</th>
+          <th class="srt" id="srt-status"   onclick="sortTable('status',this)">Status</th>
 
           <!-- ▸ NETWORK group overview header -->
           <th class="ov-hdr" id="ovh-network" onclick="toggleGroup('network')" title="Network">
             <div class="ov-hdr-inner">
               <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20" stroke-width="4"/></svg></span>
               <button class="ov-hdr-btn" id="btn-network" onclick="event.stopPropagation();toggleGroup('network')">+</button>
-              <button class="sort-btn" id="sort-network" onclick="event.stopPropagation();sortTable('network',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
+              <span class="srt-ic" onclick="event.stopPropagation();sortTable('network',this.closest('th'))"></span>
             </div>
           </th>
           <!-- Network sub-columns (hidden by default) -->
@@ -308,7 +303,7 @@
             <div class="ov-hdr-inner">
               <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg></span>
               <button class="ov-hdr-btn" id="btn-objectives" onclick="event.stopPropagation();toggleGroup('objectives')">+</button>
-              <button class="sort-btn" id="sort-objectives" onclick="event.stopPropagation();sortTable('objectives',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
+              <span class="srt-ic" onclick="event.stopPropagation();sortTable('objectives',this.closest('th'))"></span>
             </div>
           </th>
           <!-- Objectives sub-columns -->
@@ -322,7 +317,7 @@
             <div class="ov-hdr-inner">
               <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="currentColor" stroke="none"/></svg></span>
               <button class="ov-hdr-btn" id="btn-targeting" onclick="event.stopPropagation();toggleGroup('targeting')">+</button>
-              <button class="sort-btn" id="sort-targeting" onclick="event.stopPropagation();sortTable('targeting',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
+              <span class="srt-ic" onclick="event.stopPropagation();sortTable('targeting',this.closest('th'))"></span>
             </div>
           </th>
           <!-- Targeting sub-columns (hidden by default) -->
@@ -334,7 +329,7 @@
             <div class="ov-hdr-inner">
               <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
               <button class="ov-hdr-btn" id="btn-settings" onclick="event.stopPropagation();toggleGroup('settings')">+</button>
-              <button class="sort-btn" id="sort-settings" onclick="event.stopPropagation();sortTable('settings',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
+              <span class="srt-ic" onclick="event.stopPropagation();sortTable('settings',this.closest('th'))"></span>
             </div>
           </th>
           <!-- Settings sub-columns -->
@@ -352,7 +347,7 @@
             <div class="ov-hdr-inner">
               <span class="ov-hdr-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>
               <button class="ov-hdr-btn" id="btn-exclusions" onclick="event.stopPropagation();toggleGroup('exclusions')">+</button>
-              <button class="sort-btn" id="sort-exclusions" onclick="event.stopPropagation();sortTable('exclusions',this.closest('th'))"><span class="arr-up">▲</span><span class="arr-dn">▼</span></button>
+              <span class="srt-ic" onclick="event.stopPropagation();sortTable('exclusions',this.closest('th'))"></span>
             </div>
           </th>
           <!-- Exclusions sub-columns -->
@@ -415,8 +410,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
@@ -444,8 +440,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn bad">On</span></td>
@@ -537,8 +534,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -566,8 +564,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -595,8 +594,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -624,8 +624,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -653,8 +654,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn bad">On</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -682,8 +684,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Max Conversions</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -711,8 +714,9 @@
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Form Submit, Demo</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="txt-val">Target CPA</span></td>
           <td class="sub-data hidden-col grp-objectives"><span class="pn good">Off</span></td>
-          <td><span class="num-val">1</span></td>
-          <td><span class="num-val">1</span></td>
+          <td class="ov-cell ov-targeting"></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
+          <td class="sub-data hidden-col grp-targeting"><span class="num-val">1</span></td>
           <td class="ov-cell ov-settings"></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn blank">Blank</span></td>
           <td class="sub-data hidden-col grp-settings"><span class="pn good">Off</span></td>
@@ -896,18 +900,18 @@
       sortState.dir = 1;
     }
 
-    // Reset all sort button classes
-    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('asc','desc'));
+    // Reset all sort classes on all sortable headers
+    document.querySelectorAll('thead th.srt, thead th.ov-hdr').forEach(th => {
+      th.classList.remove('srt-asc', 'srt-desc');
+    });
 
     const tbody = document.getElementById('tableBody');
     const rows  = [...tbody.querySelectorAll('tr.data-row')];
 
     if (sortState.dir === 0) {
-      // Restore original order (by original DOM index stored as data attr)
       rows.sort((a, b) => (parseInt(a.dataset.origIdx,10)||0) - (parseInt(b.dataset.origIdx,10)||0));
     } else {
-      const btn = document.getElementById('sort-' + col);
-      if (btn) btn.classList.add(sortState.dir === 1 ? 'asc' : 'desc');
+      if (thEl) thEl.classList.add(sortState.dir === 1 ? 'srt-asc' : 'srt-desc');
 
       rows.sort((a, b) => {
         const ka = getRowSortKey(a, col);
